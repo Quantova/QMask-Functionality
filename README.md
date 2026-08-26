@@ -16,7 +16,10 @@ QMask is the shared app rendered on the web with `react-native-web`. It runs in 
 contexts. The popup is where a person creates or unlocks the wallet and signs. The background
 service worker holds the unlock session and relays a small set of read only chain methods. The
 content script validates and forwards messages from a page. The injected provider, `window.qmask`,
-is a single labelled seam that lets a page read the chain identity and nothing more.
+is a single labelled seam. A page can read chain data through it, and it can ask the wallet to
+connect an account or to approve a transfer, and every such request opens the QMask popup for the
+person to approve. The provider cannot sign on its own, unlock the wallet, export a key, or add an
+account.
 
 No signature and no request body is written in JavaScript. The client core does all of it.
 
@@ -136,8 +139,9 @@ cap, so an inflated fee from a compromised endpoint cannot be signed.
 - The seed at rest sits under PBKDF2 at 600,000 iterations and AES-256-GCM, behind a wrapped data key,
   so the password never encrypts the seed directly and is never stored.
 - The seed and the private key are never logged, never written in the clear, and never leave the extension.
-- The injected page provider exposes only the chain identity. It cannot sign, unlock, export a key, or
-  add an account.
+- The injected page provider can read chain data and can ask the wallet to connect an account or
+  approve a transfer, and each request opens the popup for the person to approve. It cannot sign on
+  its own, unlock the wallet, export a key, or add an account.
 - The content security policy allows no remote scripts and no eval.
 
 ## Layout
